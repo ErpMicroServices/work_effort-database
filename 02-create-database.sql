@@ -288,3 +288,17 @@ create table if not exists work_effort_fixed_asset_assignment(
   work_effort_id uuid not null references work_effort(id),
   CONSTRAINT work_effort_fixed_asset_assignment_pk PRIMARY key(id)
 );
+
+create table if not exists work_effort_inventory_produced(
+  id uuid DEFAULT uuid_generate_v4(),
+  work_effort_id uuid not null references work_effort(id),
+  inventory_id uuid not null,
+  CONSTRAINT work_effort_inventory_produced_pk PRIMARY key(id)
+);
+
+create table if not exists work_effort_deliverable_produced(
+  id uuid DEFAULT uuid_generate_v4(),
+  work_effort_id uuid not null references work_effort(id),
+  deliverable_id uuid not null references deliverable(id),
+  CONSTRAINT work_effort_deliverable_produced_pk PRIMARY key(id)
+);
