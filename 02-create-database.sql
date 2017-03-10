@@ -188,3 +188,21 @@ create table if not exists wok_effort_inventory_assignment(
   inventory_id uuid not null,
   CONSTRAINT wok_effort_inventory_assignment_pk PRIMARY key(id)
 );
+
+create table if not exists work_effort_asset_assign_status_type(
+  id uuid DEFAULT uuid_generate_v4(),
+  description text not null CONSTRAINT work_effort_asset_assign_status_type_description_not_empty CHECK (description <> ''),
+  CONSTRAINT work_effort_asset_assign_status_type_pk PRIMARY key(id)
+);
+
+create table if not exists work_effort_fixed_asset_assignment(
+  id uuid DEFAULT uuid_generate_v4(),
+  from_date date not null default current_date,
+  thru_date date,
+  allocated_cost double precision,
+  comment text,
+  work_effort_asset_assign_status_type_id uuid not null references work_effort_asset_assign_status_type(id),
+  fixed_asset_id uuid not null,
+  work_effort_id uuid not null references work_effort(id),
+  CONSTRAINT work_effort_fixed_asset_assignment_pk PRIMARY key(id)
+);
