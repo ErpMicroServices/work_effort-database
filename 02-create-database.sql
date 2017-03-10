@@ -159,7 +159,7 @@ create table if not exists position_type_rate(
   rate double precision not null,
   position_type_id uuid not null references position_type(id),
   rate_type_id uuid not null references rate_type(id),
-  CONSTRAINT _pk PRIMARY key(id)
+  CONSTRAINT position_type_rate_pk PRIMARY key(id)
 );
 
 create table if not exists party_rate(
@@ -179,4 +179,12 @@ create table if not exists work_effort_assignment_rate(
   work_effort_party_assignment_id uuid not null references work_effort_party_assignment(id),
   rate_type_id uuid not null references rate_type(id),
   CONSTRAINT work_effort_assignment_rate_pk PRIMARY key(id)
+);
+
+create table if not exists wok_effort_inventory_assignment(
+  id uuid DEFAULT uuid_generate_v4(),
+  quantity bigint not null,
+  work_effort_id uuid not null references work_effort(id),
+  inventory_id uuid not null,
+  CONSTRAINT wok_effort_inventory_assignment_pk PRIMARY key(id)
 );
