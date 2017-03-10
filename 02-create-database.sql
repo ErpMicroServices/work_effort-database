@@ -139,3 +139,44 @@ create table if not exists time_entry(
   spent_on uuid not null references work_effort(id),
   CONSTRAINT time_entry_pk PRIMARY key(id)
 );
+
+create table if not exists position_type(
+  id uuid DEFAULT uuid_generate_v4(),
+  description text not null CONSTRAINT position_type_description_not_empty CHECK (description <> ''),
+  CONSTRAINT position_type_pk PRIMARY key(id)
+);
+
+create table if not exists rate_type(
+  id uuid DEFAULT uuid_generate_v4(),
+  description text not null CONSTRAINT rate_type_description_not_empty CHECK (description <> ''),
+  CONSTRAINT rate_type_pk PRIMARY key(id)
+);
+
+create table if not exists position_type_rate(
+  id uuid DEFAULT uuid_generate_v4(),
+  from_date date not null default current_date,
+  thru_date date,
+  rate double precision not null,
+  position_type_id uuid not null references position_type(id),
+  rate_type_id uuid not null references rate_type(id),
+  CONSTRAINT _pk PRIMARY key(id)
+);
+
+create table if not exists party_rate(
+  id uuid DEFAULT uuid_generate_v4(),
+  from_date date not null default current_date,
+  thru_date date,
+  party_id uuid not null,
+  rate_type_id uuid not null references rate_type(id),
+  CONSTRAINT party_rate_pk PRIMARY key(id)
+);
+
+create table if not exists work_effort_assignment_rate(
+  id uuid DEFAULT uuid_generate_v4(),
+  from_date date not null default current_date,
+  thru_date date,
+  rate double precision,
+  work_effort_party_assignment_id uuid not null references work_effort_party_assignment(id),
+  rate_type_id uuid not null references rate_type(id),
+  CONSTRAINT work_effort_assignment_rate_pk PRIMARY key(id)
+);
