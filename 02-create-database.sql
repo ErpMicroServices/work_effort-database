@@ -105,3 +105,37 @@ create table if not exists party_skill(
   skill_type_id uuid not null references skill_type(id),
   CONSTRAINT party_skill_pk PRIMARY key(id)
 );
+
+
+create table if not exists timesheet(
+  id uuid DEFAULT uuid_generate_v4(),
+  from_date date not null default current_date,
+  thru_date date,
+  comment text,
+  CONSTRAINT timesheet_pk PRIMARY key(id)
+);
+
+create table if not exists timesheet_role_type(
+  id uuid DEFAULT uuid_generate_v4(),
+  description text not null CONSTRAINT _type_description_not_empty CHECK (description <> ''),
+  CONSTRAINT _type_pk PRIMARY key(id)
+);
+
+create table if not exists timesheet_role(
+  id uuid DEFAULT uuid_generate_v4(),
+  party_id uuid not null,
+  described_by uuid not null references timesheet_role_type(id),
+  timesheet_id uuid not null references timesheet(id),
+  CONSTRAINT timesheet_role_pk PRIMARY key(id)
+);
+
+create table if not exists time_entry(
+  id uuid DEFAULT uuid_generate_v4(),
+  from_datetime timestamp not null default current_timestamp,
+  thru_datetime timestamp,
+  hours double precision,
+  comment text,
+  timesheet_id uuid not null references timesheet(id),
+  spent_on uuid not null references work_effort(id),
+  CONSTRAINT time_entry_pk PRIMARY key(id)
+);
