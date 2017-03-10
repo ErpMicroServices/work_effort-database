@@ -101,6 +101,7 @@ create table if not exists party_skill(
   id uuid DEFAULT uuid_generate_v4(),
   years_experience bigint,
   rating text,
+  party_id uuid not null,
   skill_type_id uuid not null references skill_type(id),
   CONSTRAINT party_skill_pk PRIMARY key(id)
 );
