@@ -206,3 +206,39 @@ create table if not exists work_effort_fixed_asset_assignment(
   work_effort_id uuid not null references work_effort(id),
   CONSTRAINT work_effort_fixed_asset_assignment_pk PRIMARY key(id)
 );
+
+create table if not exists fixed_asset_type(
+  id uuid DEFAULT uuid_generate_v4(),
+  description text not null CONSTRAINT fixed_asset_type_description_not_empty CHECK (description <> ''),
+  sub_type_of uuid not null references fixed_asset_type(id),
+  CONSTRAINT fixed_asset_type_pk PRIMARY key(id)
+);
+
+create table if not exists fixed_asset(
+  id uuid DEFAULT uuid_generate_v4(),
+  name text not null constraint fixed_asset_name_not_empty check( name <> ''),
+  date_acquired date,
+  date_last_serviced date,
+  date_next_service date,
+  production_capacity bigint,
+  description text,
+  unit_of_measure uuid,
+  described_by uuid not null references fixed_asset_type( id),
+  CONSTRAINT fixed_asset_pk PRIMARY key(id)
+);
+
+create table if not exists party_asset_assignment_status_type(
+  id uuid DEFAULT uuid_generate_v4(),
+  description text not null CONSTRAINT party_asset_assignment_status_type_description_not_empty CHECK (description <> ''),
+  CONSTRAINT party_asset_assignment_status_type_pk PRIMARY key(id)
+);
+
+create table if not exists party_fixed_asset_assignment(
+  id uuid DEFAULT uuid_generate_v4(),
+  from_date date not null default current_date,
+  thru_date date,
+  allocated_cost double precision,
+  comment text,
+  party_asset_assignment_status_type_id uuid not null references party_asset_assignment_status_type(id),
+  CONSTRAINT party_fixed_asset_assignment_pk PRIMARY key(id)
+);
