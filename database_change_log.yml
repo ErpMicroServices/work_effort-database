@@ -1,7 +1,7 @@
 databaseChangeLog:
   - preConditions:
     - runningAs:
-        username: accounting-and-budgeting_database
+        username:work_effort-database
 
   - changeSet:
       id: Create and load all data
@@ -13,7 +13,7 @@ databaseChangeLog:
             path: ./sql/create-database.sql
         - sqlFile:
             path: ./sql/initial-configuration.sql
-            splitStatements: false        
+            splitStatements: false
       rollback:
         - sqlFile:
             path: ./sql/rollback_database.sql

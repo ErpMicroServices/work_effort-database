@@ -1,6 +1,6 @@
 {
-  "name": "work-effort-database",
-  "version": "0.0.0",
+  "name": "work_effort-database",
+  "version": "1.0.0",
   "description": "Data for the domain",
   "author": {
     "name": "Jim Barrows",
@@ -8,9 +8,9 @@
   },
   "license": "Apache-2.0",
   "scripts": {
-    "build": "docker build --tag erpmicroservices/work-effort-database --rm .",
-    "start": "docker run --publish 5432:5432 --name work-effort-database-1 erpmicroservices/work-effort-database",
-    "test": "cucumber-js --compiler es6:babel-core/register  -r ./features ../work-effort-features"
+    "db_admin" : "docker run --detach --publish 5050:5050 --name work_effort-database-pgadmin --link work_effort-database:db thajeztah/pgadmin4",
+	"start" : "docker run --publish 5432:5432 --name work_effort-database erpmicroservices/-work_effort-database",
+	"test" : "cucumber-js --tags @party_database --compiler es6:babel-core/register  -r ./features ../people_and_organizations-features"
   },
   "repository": {
     "type": "git",
