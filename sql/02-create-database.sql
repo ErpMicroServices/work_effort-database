@@ -228,7 +228,7 @@ create table if not exists work_effort_type
     standard_work_hours numeric(13, 3) not null default 1,
     fixed_asset_type_id uuid references fixed_asset_type (id),
     deliverable_type_id uuid references deliverable_type (id),
-    product_id          uuid,
+    produces_good_id    uuid,
     parent_id           UUID REFERENCES work_effort_type (id),
     CONSTRAINT work_effort_type_pk PRIMARY key (id)
 );
@@ -273,6 +273,7 @@ create table if not exists work_effort_type_association
     id                       uuid DEFAULT uuid_generate_v4(),
     from_work_effort_type_id uuid not null references work_effort_type (id),
     to_work_effort_type_id   uuid not null references work_effort_type (id),
+    type_id                  uuid not null references work_effort_type_association_type (id),
     CONSTRAINT _pk PRIMARY key (id)
 );
 
@@ -280,20 +281,20 @@ create table if not exists work_effort_skill_standard
 (
     id                         uuid            DEFAULT uuid_generate_v4(),
     estimated_number_of_people bigint not null default 1,
-    estimated_duration         numeric(13, 3),
-    esitmated_cost             numeric(13, 3),
-    for_work_effort_type_id    uuid   not null references work_effort_type (id),
-    for_skill_type_id          uuid   not null references skill_type (id),
+    estimated_duration         interval,
+    estimated_cost             numeric(13, 3),
+    work_effort_type_id        uuid   not null references work_effort_type (id),
+    type_id                    uuid   not null references skill_type (id),
     CONSTRAINT work_effort_skill_standard_pk PRIMARY key (id)
 );
 
 create table if not exists work_effort_good_standard
 (
-    id                      uuid DEFAULT uuid_generate_v4(),
-    estimated_quantity      bigint,
-    estimated_cost          numeric(13, 3),
-    for_work_effort_type_id uuid not null references work_effort_type (id),
-    for_good_id             uuid not null,
+    id                  uuid DEFAULT uuid_generate_v4(),
+    estimated_quantity  bigint,
+    estimated_cost      numeric(13, 3),
+    work_effort_type_id uuid not null references work_effort_type (id),
+    good_id             uuid not null,
     CONSTRAINT work_effort_good_standard_pk PRIMARY key (id)
 );
 
@@ -301,11 +302,22 @@ create table if not exists work_effort_good_standard
 (
     id                      uuid DEFAULT uuid_generate_v4(),
     estimated_quantity      bigint,
-    estimated_duration      numeric(13, 3),
+    estimated_duration      interval,
     estimated_cost          numeric(13, 3),
     for_work_effort_type_id uuid not null references work_effort_type (id),
     for_fixed_asset_id      uuid not null references fixed_asset (id),
     CONSTRAINT work_effort_good_standard_pk PRIMARY key (id)
+);
+
+create table if not exists work_effort_fixed_asset_standard
+(
+    id                  uuid DEFAULT uuid_generate_v4(),
+    estimated_quantity  bigint,
+    estimated_duration  interval,
+    estimated_cost      numeric(13, 3),
+    work_effort_type_id uuid not null references work_effort_type (id),
+    type_id             uuid not null references fixed_asset_type (id),
+    CONSTRAINT work_effort_fixed_asset_standard_pk PRIMARY key (id)
 );
 
 create table if not exists work_effort_association
