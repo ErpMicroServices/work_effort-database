@@ -318,14 +318,14 @@ create table if not exists work_effort_association
 
 create table if not exists work_effort_party_assignment
 (
-    id                      uuid          DEFAULT uuid_generate_v4(),
-    from_date               date not null default current_date,
-    thru_date               date,
-    comment                 text,
-    assigned_to_party_id    uuid not null,
-    assigned_at_facility_id uuid,
-    work_effort_role_type   uuid not null references work_effort_role_type (id),
-    work_effort_id          uuid not null references work_effort (id),
+    id                       uuid          DEFAULT uuid_generate_v4(),
+    from_date                date not null default current_date,
+    thru_date                date,
+    comment                  text,
+    party_id                 uuid not null,
+    facility_id              uuid,
+    work_effort_role_type_id uuid not null references work_effort_role_type (id),
+    work_effort_id           uuid not null references work_effort (id),
     CONSTRAINT work_effort_party_assignment_pk PRIMARY key (id)
 );
 
