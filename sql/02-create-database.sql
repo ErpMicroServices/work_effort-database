@@ -252,6 +252,7 @@ create table if not exists work_effort
     type_id                     uuid not null references work_effort_type (id),
     work_effort_purpose_type_id uuid not null references work_effort_purpose_type (id),
     parent_id                   uuid not null references work_effort (id),
+    version_of_id               uuid references work_effort (id),
     CONSTRAINT work_effort_pk PRIMARY key (id)
 );
 
