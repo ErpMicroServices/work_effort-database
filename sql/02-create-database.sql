@@ -209,12 +209,14 @@ create table if not exists party_asset_assignment_status_type
 
 create table if not exists party_fixed_asset_assignment
 (
-    id                                    uuid          DEFAULT uuid_generate_v4(),
-    from_date                             date not null default current_date,
-    thru_date                             date,
-    allocated_cost                        numeric(13, 3),
-    comment                               text,
-    party_asset_assignment_status_type_id uuid not null references party_asset_assignment_status_type (id),
+    id             uuid          DEFAULT uuid_generate_v4(),
+    from_date      date not null default current_date,
+    thru_date      date,
+    allocated_cost numeric(13, 3),
+    comment        text,
+    fixed_asset_id uuid not null references fixed_asset (id),
+    type_id        uuid not null references party_asset_assignment_status_type (id),
+    party_id       uuid not null,
     CONSTRAINT party_fixed_asset_assignment_pk PRIMARY key (id)
 );
 
