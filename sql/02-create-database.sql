@@ -89,31 +89,32 @@ create table if not exists party_skill
 );
 
 
-create table if not exists timesheet
+create table if not exists time_sheet
 (
     id        uuid          DEFAULT uuid_generate_v4(),
     from_date date not null default current_date,
     thru_date date,
     comment   text,
-    CONSTRAINT timesheet_pk PRIMARY key (id)
+    party_role_id  uuid not null,
+    CONSTRAINT time_sheet_pk PRIMARY key (id)
 );
 
-create table if not exists timesheet_role_type
+create table if not exists time_sheet_role_type
 (
     id          uuid DEFAULT uuid_generate_v4(),
     description text not null
         CONSTRAINT _type_description_not_empty CHECK (description <> ''),
-    parent_id   UUID REFERENCES timesheet_role_type (id),
+    parent_id   UUID REFERENCES time_sheet_role_type (id),
     CONSTRAINT _type_pk PRIMARY key (id)
 );
 
-create table if not exists timesheet_role
+create table if not exists time_sheet_role
 (
-    id           uuid DEFAULT uuid_generate_v4(),
-    party_id     uuid not null,
-    described_by uuid not null references timesheet_role_type (id),
-    timesheet_id uuid not null references timesheet (id),
-    CONSTRAINT timesheet_role_pk PRIMARY key (id)
+    id                     uuid DEFAULT uuid_generate_v4(),
+    party_id               uuid not null,
+    time_sheet_role_type_id uuid not null references time_sheet_role_type (id),
+    time_sheet_id           uuid not null references time_sheet (id),
+    CONSTRAINT time_sheet_role_pk PRIMARY key (id)
 );
 
 create table if not exists position_type
@@ -347,13 +348,13 @@ create table if not exists work_requirement_fulfillment
 
 create table if not exists time_entry
 (
-    id            uuid               DEFAULT uuid_generate_v4(),
-    from_datetime timestamp not null default current_timestamp,
-    thru_datetime timestamp,
-    hours         numeric(13, 3),
-    comment       text,
-    timesheet_id  uuid      not null references timesheet (id),
-    spent_on      uuid      not null references work_effort (id),
+    id             uuid               DEFAULT uuid_generate_v4(),
+    from_date_time timestamp not null default current_timestamp,
+    thru_date_time timestamp,
+    hours          interval,
+    comment        text,
+    time_sheet_id   uuid      not null references time_sheet (id),
+    work_effort_id uuid      not null references work_effort (id),
     CONSTRAINT time_entry_pk PRIMARY key (id)
 );
 
