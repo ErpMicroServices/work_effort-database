@@ -91,11 +91,11 @@ create table if not exists party_skill
 
 create table if not exists time_sheet
 (
-    id        uuid          DEFAULT uuid_generate_v4(),
-    from_date date not null default current_date,
-    thru_date date,
-    comment   text,
-    party_role_id  uuid not null,
+    id            uuid          DEFAULT uuid_generate_v4(),
+    from_date     date not null default current_date,
+    thru_date     date,
+    comment       text,
+    party_role_id uuid not null,
     CONSTRAINT time_sheet_pk PRIMARY key (id)
 );
 
@@ -110,8 +110,8 @@ create table if not exists time_sheet_role_type
 
 create table if not exists time_sheet_role
 (
-    id                     uuid DEFAULT uuid_generate_v4(),
-    party_id               uuid not null,
+    id                      uuid DEFAULT uuid_generate_v4(),
+    party_id                uuid not null,
     time_sheet_role_type_id uuid not null references time_sheet_role_type (id),
     time_sheet_id           uuid not null references time_sheet (id),
     CONSTRAINT time_sheet_role_pk PRIMARY key (id)
@@ -184,7 +184,7 @@ create table if not exists fixed_asset
     date_next_service   date,
     production_capacity bigint,
     description         text,
-    unit_of_measure     uuid,
+    unit_of_measure_id  uuid,
     type_id             uuid not null references fixed_asset_type (id),
     CONSTRAINT fixed_asset_pk PRIMARY key (id)
 );
@@ -353,7 +353,7 @@ create table if not exists time_entry
     thru_date_time timestamp,
     hours          interval,
     comment        text,
-    time_sheet_id   uuid      not null references time_sheet (id),
+    time_sheet_id  uuid      not null references time_sheet (id),
     work_effort_id uuid      not null references work_effort (id),
     CONSTRAINT time_entry_pk PRIMARY key (id)
 );
@@ -380,14 +380,14 @@ create table if not exists work_effort_inventory_assignment
 
 create table if not exists work_effort_fixed_asset_assignment
 (
-    id                                      uuid          DEFAULT uuid_generate_v4(),
-    from_date                               date not null default current_date,
-    thru_date                               date,
-    allocated_cost                          numeric(13, 3),
-    comment                                 text,
-    work_effort_asset_assign_status_type_id uuid not null references work_effort_asset_assign_status_type (id),
-    fixed_asset_id                          uuid not null,
-    work_effort_id                          uuid not null references work_effort (id),
+    id             uuid          DEFAULT uuid_generate_v4(),
+    from_date      date not null default current_date,
+    thru_date      date,
+    allocated_cost numeric(13, 3),
+    comment        text,
+    type_id        uuid not null references work_effort_asset_assign_status_type (id),
+    fixed_asset_id uuid not null,
+    work_effort_id uuid not null references work_effort (id),
     CONSTRAINT work_effort_fixed_asset_assignment_pk PRIMARY key (id)
 );
 
